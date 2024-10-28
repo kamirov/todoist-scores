@@ -50,6 +50,7 @@ async function getCompletedTasks(date) {
       params: {
         since,
         until,
+        limit: 200, // TODO: Paginate through the results, instead of assuming we have less than 200 tasks. Realistically, ain't noone completing this many tasks in a day.
         annotate_items: true,
       },
     });
