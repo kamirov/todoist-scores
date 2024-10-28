@@ -8,7 +8,7 @@ const TODOIST_API_TOKEN = process.env.TODOIST_API_TOKEN;
 const BASE_URL = "https://api.todoist.com/sync/v9";
 
 export const handler = async (event) => {
-  const nDays = 2; // Default number of days
+  const nDays = 1; // Default number of days
   let scores = {};
 
   try {
@@ -39,10 +39,11 @@ export const handler = async (event) => {
 
 async function getCompletedTasks(date) {
   try {
-    const since = date.toISO();
-    const until = date.plus({ days: 1 }).minus({ seconds: 1 }).toISO();
+    const since = date.toUTC().toISO();
+    const until = date.plus({ days: 1 }).minus({ seconds: 1 }).toUTC().toISO();
 
-    console.log(`Fetching completed tasks from ${since} to ${until}`);
+    console.log(`Fetching tasks from ${since} to ${until}`);
+
     const response = await axios.get(`${BASE_URL}/completed/get_all`, {
       headers: {
         Authorization: `Bearer ${TODOIST_API_TOKEN}`,
@@ -54,6 +55,11 @@ async function getCompletedTasks(date) {
         annotate_items: true,
       },
     });
+
+    console.log(
+      `Fetched ${response.data.items.length} tasks for date ${date.toISODate()}`
+    );
+
     return response.data.items || [];
   } catch (error) {
     console.error(`Error fetching tasks for date ${date.toISODate()}:`, error);
@@ -64,7 +70,6 @@ async function getCompletedTasks(date) {
 function calculateDayScore(tasks) {
   let score = 0;
   tasks.forEach((task) => {
-    console.log(task);
     task.item_object.labels.forEach((label) => {
       if (label.endsWith("$") && !isNaN(parseInt(label))) {
         score += parseInt(label);
