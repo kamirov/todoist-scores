@@ -37,7 +37,9 @@ This project contains an AWS Lambda function that interacts with the Todoist API
      ```bash
      yarn local
      ```
-5. **Deploy to AWS Lambda**:
+5. **Manually create Lambda**:
+   - Log into the AWS console and manually follow the process to create a new Lambda with a Node runtime (this is a nasty step, I ought to automate this)
+6. **Deploy to AWS Lambda**:
    - **Build the deployment package**:
      ```bash
      yarn build
