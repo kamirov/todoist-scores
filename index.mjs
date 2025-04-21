@@ -8,11 +8,13 @@ const TODOIST_API_TOKEN = process.env.TODOIST_API_TOKEN;
 const BASE_URL = "https://api.todoist.com/sync/v9";
 
 export const handler = async (event) => {
+  // We trigger this at 3am every day, but we want to get the previous day's score.
+
   const nDays = 1; // Default number of days
   let scores = {};
 
   try {
-    for (let dayOffset = 0; dayOffset < nDays; dayOffset++) {
+    for (let dayOffset = 1; dayOffset < nDays + 1; dayOffset++) {
       const date = DateTime.now()
         .setZone("America/Toronto")
         .minus({ days: dayOffset })
